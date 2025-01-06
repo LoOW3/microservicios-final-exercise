@@ -1,0 +1,101 @@
+services:
+  eureka-server:
+    build: eureka-server
+    ports:
+      - "3333:3333"
+    networks:
+      - my_network
+
+  api-gateway:
+    build: api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - my_network
+
+  products:
+    build: products
+    ports:
+      - "3335:3335"
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=asdfj
+    depends_on:
+      mysql-server:
+        condition: service_healthy
+    networks:
+      - my_network
+  products2:
+    build: products
+    ports:
+      - "3336:3335"
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=asdfj
+    depends_on:
+      mysql-server:
+        condition: service_healthy
+    networks:
+      - my_network
+  sales:
+    build: sales
+    ports:
+      - "3700:3700"
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=asdfj
+    depends_on:
+      mysql-server:
+        condition: service_healthy
+    networks:
+      - my_network
+
+  shopping-cart:
+    build: shopping-cart
+    ports:
+      - "3400:3400"
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=asdfj
+    depends_on:
+      mysql-server:
+        condition: service_healthy
+    networks:
+      - my_network
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      - MYSQL_ROOT_PASSWORD=asdfj
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=asdfj
+      - PMA_HOST=mysql-server
+    networks:
+      - my_network
+
+  mysql-server:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=asdfj
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u", "root", "-p$MYSQL_ROOT_PASSWORD", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+    networks:
+      - my_network
+
+volumes:
+  mysql-data:
+
+networks:
+  my_network:
+    driver: bridge
