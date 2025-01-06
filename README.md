@@ -7,4 +7,7 @@ This project implements a shopping cart API using Spring Cloud and Docker. It fo
 - **Spring Cloud**: Leverages Spring Cloud for service discovery, configuration management, and fault tolerance.
 - **Dockerized**: All services are packaged in Docker containers, enabling smooth deployment across different platforms.
 - **Scalable**: Designed for scalability, allowing easy scaling of individual services based on demand.
-# microservicios-final-exercise
+
+To run this project, make sure you clean and build each microservice. 
+According to the Dockerfile in each microservice, the executable should be in the subdirectory `target/<exec>.jar`. 
+Also, ensure there are no volumes called `mysql-data` on your computer.
